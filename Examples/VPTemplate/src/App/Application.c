@@ -38,11 +38,7 @@
 
 
 /***** PRIVATE PROTOTYPES ****************************************************/
-// State realte functions (on-Entry, on-State and on-Exit)
-static int32_t onEntryStartup(State_t* pState, int32_t eventID);
 static int32_t onStateRunning(State_t* pState, int32_t eventID);
-static int32_t onExitRunning(State_t* pState, int32_t eventID);
-static int32_t onEntryFailure(State_t* pState, int32_t eventID);
 
 /***** PRIVATE VARIABLES *****************************************************/
 
@@ -55,9 +51,9 @@ static int32_t onEntryFailure(State_t* pState, int32_t eventID);
  */
 static State_t gStateList[] =
 {
-    {STATE_ID_STARTUP, onEntryStartup,  0,                  0,              false},
-    {STATE_ID_RUNNING, 0,               onStateRunning,     onExitRunning,  false},
-    {STATE_ID_FAILURE, onEntryFailure,  0,                  0,              false}
+    {STATE_ID_STARTUP, 0,  		0,                  0,              false},
+    {STATE_ID_RUNNING, 0,       onStateRunning,     0,  			false},
+    {STATE_ID_FAILURE, 0,  		0,                  0,              false}
 };
 
 /**
@@ -71,7 +67,7 @@ static StateTableEntry_t gStateTableEntries[] =
 {
     {STATE_ID_STARTUP,          STATE_ID_RUNNING,           EVT_ID_INIT_READY,          0,      0,      0},
     {STATE_ID_STARTUP,          STATE_ID_FAILURE,           EVT_ID_SENSOR_FAILED,       0,      0,      0},
-    {STATE_ID_RUNNING,          STATE_ID_FAILURE,           EVT_ID_SENSOR_FAILED,       0,      0,      0}
+    {STATE_ID_RUNNING,          STATE_ID_FAILURE,           EVT_ID_SENSOR_FAILED,       0,      0,      0},
 };
 
 /**
@@ -106,23 +102,8 @@ int32_t sameplAppSendEvent(int32_t eventID)
 
 
 /***** PRIVATE FUNCTIONS *****************************************************/
-
-static int32_t onEntryStartup(State_t* pState, int32_t eventID)
-{
-    return sameplAppSendEvent(EVT_ID_INIT_READY);
-}
-
 static int32_t onStateRunning(State_t* pState, int32_t eventID)
 {
-    return 0;
+	return 0;
 }
 
-static int32_t onExitRunning(State_t* pState, int32_t eventID)
-{
-    return 0;
-}
-
-static int32_t onEntryFailure(State_t* pState, int32_t eventID)
-{
-    return 0;
-}

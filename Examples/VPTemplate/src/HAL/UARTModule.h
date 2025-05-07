@@ -25,6 +25,7 @@
 #define UART_ERR_OK                  0          //!< No error occured
 #define UART_ERR_INIT_FAILURE        -1         //!< Error during UART initialization
 #define UART_ERR_TRANSMIT            -2         //!< Error during UART tranmission
+#define UART_ERR_RECEIVE             -3         //!< Error during UART receive
 
 
 /***** TYPES *****************************************************************/
@@ -54,5 +55,7 @@ int32_t uartInitialize(uint32_t baudrate);
  * @return Returns UART_ERR_OK if no error occured, otherwise UART_ERR_TRANSMIT
  */
 int32_t uartSendData(uint8_t* pDataBuffer, int32_t bufferLength);
+
+int32_t uartReceiveData(uint8_t* pDataBuffer, int32_t bufferLength);
 
 #endif

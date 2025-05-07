@@ -122,4 +122,18 @@ int32_t uartSendData(uint8_t* pDataBuffer, int32_t bufferLength)
     return result;
 }
 
+int32_t uartReceiveData(uint8_t* pDataBuffer, int32_t bufferLength)
+{
+    int32_t result = UART_ERR_OK;
+
+    HAL_StatusTypeDef halStatus = HAL_UART_Receive(&gUARTHandle, pDataBuffer, bufferLength, HAL_MAX_DELAY);
+
+    if (halStatus != HAL_OK )
+    {
+        result = UART_ERR_RECEIVE;
+    }
+
+    return result;
+}
+
 /***** PRIVATE FUNCTIONS *****************************************************/
