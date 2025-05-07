@@ -11,7 +11,9 @@ If you don't want to install a Linux distribution by your own, just download a r
 https://www.kali.org/get-kali/#kali-virtual-machines
 
 ## Get Install Script
-  $ wget https://github.com/2710242a-2eb5-4a77-9cbb-31bf105b5976
+  $ cd ~
+  $ wget https://raw.githubusercontent.com/asschmidt/VPLectureMaterial/refs/heads/main/Setup/install.sh
+  $ bash install.sh
 
 ## Prerequisites
 The following tools should be installed on the Linux system used for the Lecture examples
