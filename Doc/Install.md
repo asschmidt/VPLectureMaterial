@@ -10,9 +10,10 @@ Create a VirtualBox VM for Linux and install Ubuntu with default packages. The V
 If you don't want to install a Linux distribution by your own, just download a ready-to-use Kali Linux VM
 https://www.kali.org/get-kali/#kali-virtual-machines
 
-## Get Install Script
+## Get Install Script (install everything via script)
+  $ sudo apt-get install curl
   $ cd ~
-  $ wget https://raw.githubusercontent.com/asschmidt/VPLectureMaterial/refs/heads/main/Setup/install.sh
+  $ curl https://raw.githubusercontent.com/asschmidt/VPLectureMaterial/refs/heads/main/Setup/install.sh >> install.sh
   $ bash install.sh
 
 ## Prerequisites
@@ -30,7 +31,7 @@ The following tools should be installed on the Linux system used for the Lecture
 - ImHex
 - Ghidra
 
-### Install Prerequisites
+### Install Prerequisites (manually)
     $ sudo apt-get update
 
     $ sudo apt-get install neovim xz-utils git gcc build-essential
