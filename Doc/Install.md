@@ -6,13 +6,12 @@ https://ubuntu.com/download/desktop
 
 Create a VirtualBox VM for Linux and install Ubuntu with default packages. The VM should have at least 4GB of RAM
 
-Update the package database
-
-    $ sudo apt-get update
-
 ## Download Kali Linux VM
 If you don't want to install a Linux distribution by your own, just download a ready-to-use Kali Linux VM
 https://www.kali.org/get-kali/#kali-virtual-machines
+
+## Get Install Script
+  $ wget https://github.com/2710242a-2eb5-4a77-9cbb-31bf105b5976
 
 ## Prerequisites
 The following tools should be installed on the Linux system used for the Lecture examples
@@ -26,11 +25,14 @@ The following tools should be installed on the Linux system used for the Lecture
 - Python
 - Curl
 - WGet
+- ImHex
+- Ghidra
 
 ### Install Prerequisites
+    $ sudo apt-get update
 
     $ sudo apt-get install neovim xz-utils git gcc build-essential
-    $ sudo apt-get install openjdk-21-jdk cmake python3 curl wget
+    $ sudo apt-get install openjdk-21-jdk cmake python3 curl wget imhex ghidra
 
 
 ## Tools
@@ -39,6 +41,7 @@ The following tools should be installed on the Linux system used for the Lecture
 
     $ cd ~
     $ mkdir Tools
+	$ cd Tools
 
     $ wget https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz
 
@@ -71,3 +74,12 @@ Download Eclipse for C/C++
     $ wget https://eclipse.mirror.liteserver.nl/technology/epp/downloads/release/2024-12/R/eclipse-cpp-2024-12-R-linux-gtk-x86_64.tar.gz
 
     $ tar xvfz eclipse-cpp-2024-12-R-linux-gtk-x86_64.tar.gz
+
+
+# Setup
+Clone the VPLectureMaterials repo
+
+	$ cd ~
+	$ mkdir Repo
+	$ cd Repo
+    $ git clone https://github.com/asschmidt/VPLectureMaterial

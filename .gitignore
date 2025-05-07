@@ -1,3 +1,8 @@
 /Examples/CStartup/.project
 /Examples/CStartup/.settings
 /Examples/CStartup/.cproject
+/Examples/VPTemplate/build
+/Examples/VPTemplate/obj
+/Examples/Stack/*.bin
+/Examples/Stack/*.elf
+/Examples/Stack/*.o
