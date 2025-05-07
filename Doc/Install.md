@@ -11,10 +11,10 @@ If you don't want to install a Linux distribution by your own, just download a r
 https://www.kali.org/get-kali/#kali-virtual-machines
 
 ## Get Install Script (install everything via script)
-  $ sudo apt-get install curl
-  $ cd ~
-  $ curl https://raw.githubusercontent.com/asschmidt/VPLectureMaterial/refs/heads/main/Setup/install.sh >> install.sh
-  $ bash install.sh
+    $ sudo apt-get install curl
+    $ cd ~
+    $ curl https://raw.githubusercontent.com/asschmidt/VPLectureMaterial/refs/heads/main/Setup/install.sh >> install.sh
+    $ bash install.sh
 
 ## Prerequisites
 The following tools should be installed on the Linux system used for the Lecture examples
