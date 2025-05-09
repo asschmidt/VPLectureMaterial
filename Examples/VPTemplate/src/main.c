@@ -18,6 +18,8 @@
 #include "stm32g4xx_hal.h"
 #include "System.h"
 
+#include "HardwareConfig.h"
+
 #include "Util/Global.h"
 #include "Util/printf.h"
 #include "LogOutput.h"
@@ -27,7 +29,6 @@
 #include "LEDModule.h"
 #include "ADCModule.h"
 #include "TimerModule.h"
-#include "DisplayModule.h"
 #include "Scheduler.h"
 
 #include "GlobalObjects.h"
@@ -72,7 +73,6 @@ int main(void)
     schedInitialize(&gScheduler);
 
     int globalCounter = 0;
-    int currentDisplay = 0;
 
     while (1)
     {
@@ -81,12 +81,10 @@ int main(void)
         ledToggleLED(LED1);
         ledToggleLED(LED2);
         ledToggleLED(LED3);
-        ledToggleLED(LED4);
 
         // Read to buttons
         Button_Status_t but1 = buttonGetButtonStatus(BTN_SW1);
         Button_Status_t but2 = buttonGetButtonStatus(BTN_SW2);
-        Button_Status_t but3 = buttonGetButtonStatus(BTN_B1);
 
         // Read the POT1 input from ADC
         int adcValue = adcReadChannel(ADC_INPUT0);
@@ -100,43 +98,19 @@ int main(void)
         // If SW2 is pressed, print the ADC digit value on the terminal
         if (but2 == BUTTON_PRESSED)
         {
-            outputLogf("ADC Val: %d\n\r", adcValue);
-        }
-
-        // If B1 is pressed, print the ADC digit value on the terminal
-        if (but3 == BUTTON_PRESSED)
-        {
-            outputLog("Button B1\n\r");
-        }
-
-        // Do some random stuff with the 7-Segment displays
-        globalCounter++;
-
-        if (currentDisplay <= 9)
-        {
-            displayShowDigit(LEFT_DISPLAY, currentDisplay);
-            currentDisplay++;
+        	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_RESET);
         }
         else
         {
-            displayShowDigit(RIGHT_DISPLAY, currentDisplay);
-
-            currentDisplay++;
-
-            if (currentDisplay >= 19)
-                currentDisplay = 0;
+        	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_SET);
         }
 
+        outputLogf("ADC Val: %d\n\r", adcValue);
 
         // Remove this HAL_Delay as soon as there is a Scheduler used
         HAL_Delay(100);
-
-        // Call the Scheduler
-        schedCycle(&gScheduler);
     }
 }
-
-
 
 /***** PRIVATE FUNCTIONS *****************************************************/
 
@@ -156,7 +130,7 @@ static int32_t initializePeripherals()
 
     // Initialize GPIOs for LED and 7-Segment output
     ledInitialize();
-    displayInitialize();
+    //displayInitialize();
 
     // Initialize Timer, DMA and ADC for sensor measurements
     timerInitialize();
