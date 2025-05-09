@@ -34,8 +34,9 @@
 typedef enum _Button_t
 {
     BTN_B1,
-    BTN_SW1,                        //!< Button used to activate/deactivate the system (SW1)
-    BTN_SW2                         //!< Button used for race mode (SW2)
+    BTN_SW1,                        //!< Button (SW1)
+    BTN_SW2,                        //!< Button (SW2)
+	BTN_SW3                         //!< Button (SW3)
 } Button_t;
 
 /**
