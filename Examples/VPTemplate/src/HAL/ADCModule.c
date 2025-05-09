@@ -29,13 +29,13 @@ static const int32_t MICROVOLTS_PER_DIGIT = 805;    //!< 805 µV / digit
 
 
 /***** PRIVATE MACROS ********************************************************/
-#define ADC_CHANNEL_COUNT       5                   //!< Total number of used ADC channels
+#define ADC_CHANNEL_COUNT       4                   //!< Total number of used ADC channels
 
 #define IDX_ADC_INPUT0          0                   //!< Array index for ADC channel 0 (Pot 1) in global ADC value array
-#define IDX_ADC_INPUT1          1                   //!< Array index for ADC channel 1 (Pot 2) in global ADC value array
-#define IDX_ADC_TEMP            2                   //!< Array index for ADC channel 2 (internal Temp) in global ADC value array
-#define IDX_ADC_VBAT            3                   //!< Array index for ADC channel 3 (VBat) in global ADC value array
-#define IDX_ADC_VREF            4                   //!< Array index for ADC channel 4 (internal reference voltage) in global ADC value array
+#define IDX_ADC_INPUT1          0                   //!< Array index for ADC channel 1 (Pot 2) in global ADC value array
+#define IDX_ADC_TEMP            1                   //!< Array index for ADC channel 2 (internal Temp) in global ADC value array
+#define IDX_ADC_VBAT            2                   //!< Array index for ADC channel 3 (VBat) in global ADC value array
+#define IDX_ADC_VREF            3                   //!< Array index for ADC channel 4 (internal reference voltage) in global ADC value array
 
 
 /***** PRIVATE TYPES *********************************************************/
@@ -77,7 +77,7 @@ int32_t adcInitialize()
     gADCHandle.Init.EOCSelection 			= ADC_EOC_SINGLE_CONV;
     gADCHandle.Init.LowPowerAutoWait 		= DISABLE;
     gADCHandle.Init.ContinuousConvMode 		= DISABLE;
-    gADCHandle.Init.NbrOfConversion 		= 5;
+    gADCHandle.Init.NbrOfConversion 		= 4;
     gADCHandle.Init.DiscontinuousConvMode 	= DISABLE;
     gADCHandle.Init.ExternalTrigConv 		= ADC_EXTERNALTRIG_T3_TRGO;
     gADCHandle.Init.ExternalTrigConvEdge 	= ADC_EXTERNALTRIGCONVEDGE_RISING;
@@ -113,12 +113,12 @@ int32_t adcInitialize()
 
 	/** Configure Regular Channel
 	*/
-	sConfig.Channel 		= ADC_CHANNEL_2;
+	/*sConfig.Channel 		= ADC_CHANNEL_2;
 	sConfig.Rank 			= ADC_REGULAR_RANK_2;
 	if (HAL_ADC_ConfigChannel(&gADCHandle, &sConfig) != HAL_OK)
 	{
 		Error_Handler();
-	}
+	}*/
 
 	/** Configure Regular Channel
 	*/
@@ -193,7 +193,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 	PA0     ------> ADC1_IN1
 	PA1     ------> ADC1_IN2
 	*/
-	GPIO_InitStruct.Pin 	= POT1_PIN | POT2_PIN;
+	//GPIO_InitStruct.Pin 	= POT1_PIN | POT2_PIN;
+	GPIO_InitStruct.Pin 	= POT1_PIN;
 	GPIO_InitStruct.Mode 	= GPIO_MODE_ANALOG;
 	GPIO_InitStruct.Pull 	= GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -234,7 +235,8 @@ int32_t adcReadChannelRaw(ADC_Channel_t adcChannel)
             break;
 
         case ADC_INPUT1:
-            adcValue = gADCValues[IDX_ADC_INPUT1];
+            //adcValue = gADCValues[IDX_ADC_INPUT1];
+        	adcValue = gADCValues[IDX_ADC_INPUT0];
             break;
 
         case ADC_TEMP:
