@@ -96,3 +96,66 @@ int main()
     float b = 2.3;
     float result = a+ b;
 }
+
+
+// ABI Demo
+// -O0, -O1
+int func1(int a, int b)
+{
+    int result = a + b;
+
+    return result;
+}
+
+int func2(int a, int b, int c, int d)
+{
+    int result = a + b + c + d;
+
+    return result;
+}
+
+int func3(int a, int b, int c, int d, int e, int f, int g, int h)
+{
+    int result = a + b + c + d + e + f + g + h;
+
+    return result;
+}
+
+int main()
+{
+    int res1 = func1(10, 20);
+    int res2 = func2(10, 20, 30, 40);
+    int res3 = func3(10, 20, 30, 40, 50, 60, 70, 80);
+
+    return res1 + res2 + res3;
+}
+
+
+// Variadic Functions
+#include <stdarg.h>
+
+int func(int n, int a, int b, ...)
+{
+    int result = a + b;
+
+    va_list args;
+    va_start(args, b); 
+
+    for (int i = 0; i < n; i++) 
+    {
+        //double param = va_arg(args, double);
+        int param = va_arg(args, int);
+        result = result + (int)param;
+    }
+    
+    va_end(args);
+
+    return result;
+}
+
+int main()
+{
+    int res1 = func(4, 10, 20, 30, 40);
+    
+    return res1;
+}
