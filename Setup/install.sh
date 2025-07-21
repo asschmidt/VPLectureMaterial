@@ -13,7 +13,7 @@ sudo apt-get install qemu-system
 sudo apt-get install openocd
 
 cd ~/Tools
-wget https://eclipse.mirror.liteserver.nl/technology/epp/downloads/release/2024-12/R/eclipse-cpp-2024-12-R-linux-gtk-x86_64.tar.gz
+wget https://eclipse.mirror.wearetriple.com//technology/epp/downloads/release/2025-06/R/eclipse-cpp-2025-06-R-linux-gtk-x86_64.tar.gz
 tar xvfz eclipse-cpp-2024-12-R-linux-gtk-x86_64.tar.gz
 
 cd ~
