@@ -76,7 +76,7 @@ Download Eclipse for C/C++
 
     $ wget https://eclipse.mirror.wearetriple.com//technology/epp/downloads/release/2025-06/R/eclipse-cpp-2025-06-R-linux-gtk-x86_64.tar.gz
 
-    $ tar xvfz eclipse-cpp-2024-12-R-linux-gtk-x86_64.tar.gz
+    $ tar xvfz eclipse-cpp-2025-06-R-linux-gtk-x86_64.tar.gz
 
 
 # Setup

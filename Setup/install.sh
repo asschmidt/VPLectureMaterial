@@ -14,7 +14,7 @@ sudo apt-get install openocd
 
 cd ~/Tools
 wget https://eclipse.mirror.wearetriple.com//technology/epp/downloads/release/2025-06/R/eclipse-cpp-2025-06-R-linux-gtk-x86_64.tar.gz
-tar xvfz eclipse-cpp-2024-12-R-linux-gtk-x86_64.tar.gz
+tar xvfz eclipse-cpp-2025-06-R-linux-gtk-x86_64.tar.gz
 
 cd ~
 echo 'PATH="$PATH:/home/kali/Tools/arm-gnu-toolchain/bin:/home/kali/Tools/eclipse"' >> .profile
