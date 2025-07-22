@@ -19,7 +19,7 @@
 
 #define WAIT_LOOP(x) int v=x; do { v++; }while(v > 10);\
                      v = v * x; \
-                     int b = v * v;
+                     int b = v * v; \
                      debugOut();
 
 static int globalVarInit = INIT_VALUE;
