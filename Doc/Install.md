@@ -1,12 +1,6 @@
-# Installation
+# Installation based on Kali VM
+Download and install VirtualBox on your system
 
-## Ubuntu VirtualBox Installation
-Download the Ubuntu 24.10 ISO Image
-https://ubuntu.com/download/desktop
-
-Create a VirtualBox VM for Linux and install Ubuntu with default packages. The VM should have at least 4GB of RAM
-
-## Download Kali Linux VM
 If you don't want to install a Linux distribution by your own, just download a ready-to-use Kali Linux VM
 https://www.kali.org/get-kali/#kali-virtual-machines
 
@@ -16,7 +10,8 @@ https://www.kali.org/get-kali/#kali-virtual-machines
     $ curl https://raw.githubusercontent.com/asschmidt/VPLectureMaterial/refs/heads/main/Setup/install.sh >> install.sh
     $ bash install.sh
 
-## Prerequisites
+
+## Manual installation
 The following tools should be installed on the Linux system used for the Lecture examples
 
 - NeoVim
@@ -31,14 +26,12 @@ The following tools should be installed on the Linux system used for the Lecture
 - ImHex
 - Ghidra
 
-### Install Prerequisites (manually)
+
     $ sudo apt-get update
 
     $ sudo apt-get install neovim xz-utils git gcc build-essential
     $ sudo apt-get install openjdk-21-jdk cmake python3 curl wget imhex ghidra
 
-
-## Tools
 
 ### ARM GNU Toolchain
 
