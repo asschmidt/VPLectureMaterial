@@ -27,6 +27,7 @@
 #include "UARTModule.h"
 #include "ButtonModule.h"
 #include "LEDModule.h"
+#include "DisplayModule.h"
 #include "ADCModule.h"
 #include "TimerModule.h"
 #include "Scheduler.h"
@@ -85,6 +86,7 @@ int main(void)
         // Read to buttons
         Button_Status_t but1 = buttonGetButtonStatus(BTN_SW1);
         Button_Status_t but2 = buttonGetButtonStatus(BTN_SW2);
+        Button_Status_t but3 = buttonGetButtonStatus(BTN_B1);
 
         // Read the POT1 input from ADC
         int adcValue = adcReadChannel(ADC_INPUT0);
@@ -93,19 +95,29 @@ int main(void)
         if (but1 == BUTTON_PRESSED)
         {
             outputLogf("Some Message %d\n\r", globalCounter);
+            displayShowDigit(RIGHT_DISPLAY, DIGIT_DASH);
+        }
+        else
+        {
+            displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
         }
 
         // If SW2 is pressed, print the ADC digit value on the terminal
         if (but2 == BUTTON_PRESSED)
         {
         	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_RESET);
+            //displayShowDigit(LEFT_DISPLAY, DIGIT_DASH);
         }
         else
         {
         	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_SET);
+            //displayShowDigit(LEFT_DISPLAY, DIGIT_OFF);
         }
 
-        outputLogf("ADC Val: %d\n\r", adcValue);
+        if (but3 == BUTTON_PRESSED)
+        {
+        	outputLogf("ADC Val: %d\n\r", adcValue);
+        }
 
         // Remove this HAL_Delay as soon as there is a Scheduler used
         HAL_Delay(100);
@@ -125,12 +137,12 @@ static int32_t initializePeripherals()
     // Initialize UART used for Debug-Outputs
     uartInitialize(115200);
 
+    // Initialize GPIOs for LED and 7-Segment output
+	ledInitialize();
+    displayInitialize();
+
     // Initialize GPIOs for Buttons
     buttonInitialize();
-
-    // Initialize GPIOs for LED and 7-Segment output
-    ledInitialize();
-    //displayInitialize();
 
     // Initialize Timer, DMA and ADC for sensor measurements
     timerInitialize();

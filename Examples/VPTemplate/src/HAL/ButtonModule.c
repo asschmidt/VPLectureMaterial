@@ -59,19 +59,14 @@ int32_t buttonInitialize()
 	  /*Configure GPIO pin : PtPin */
 	  GPIO_InitStruct.Pin = SW1_PIN;
 	  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  GPIO_InitStruct.Pull = GPIO_PULLUP;
 	  HAL_GPIO_Init(SW1_GPIO_PORT, &GPIO_InitStruct);
 
 	  /*Configure GPIO pin : PtPin */
 	  GPIO_InitStruct.Pin = SW2_PIN;
 	  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  GPIO_InitStruct.Pull = GPIO_PULLUP;
 	  HAL_GPIO_Init(SW2_GPIO_PORT, &GPIO_InitStruct);
-
-	  GPIO_InitStruct.Pin = SW3_PIN;
-	  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	  GPIO_InitStruct.Pull = GPIO_NOPULL;
-	  HAL_GPIO_Init(SW3_GPIO_PORT, &GPIO_InitStruct);
 
 	  return BUTTON_ERR_OK;
 }
@@ -104,17 +99,6 @@ Button_Status_t buttonGetButtonStatus(Button_t button)
                 buttonStatus = BUTTON_RELEASED;
         }
         break;
-
-        // Read the First Floor button (internal pull-up --> GPIO=1 ==> Button released)
-		case BTN_SW3:
-		{
-			gpioStatus = HAL_GPIO_ReadPin(SW3_GPIO_PORT, SW3_PIN);
-			if (gpioStatus == GPIO_PIN_RESET)
-				buttonStatus = BUTTON_PRESSED;
-			else
-				buttonStatus = BUTTON_RELEASED;
-		}
-		break;
 
         // Read the First Floor button (internal pull-up --> GPIO=1 ==> Button released)
 		case BTN_B1:
