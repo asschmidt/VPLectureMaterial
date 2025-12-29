@@ -1,6 +1,6 @@
 #
 # Define the commands which should be used to build the files
-# Cross-compilation commands 
+# Cross-compilation commands
 CC      = arm-none-eabi-gcc
 AR      = arm-none-eabi-ar
 AS		= arm-none-eabi-as
@@ -9,7 +9,7 @@ OBJCOPY = arm-none-eabi-objcopy
 SIZE    = arm-none-eabi-size
 
 
-# 
+#
 # Project specific options
 #
 
@@ -35,18 +35,18 @@ DEF	= -DSTM32G4xx -DSTM32G474xx -DUSE_HAL_DRIVER -DF_CPU=170000000L -DDEBUG_BUIL
 #
 
 # Assembler Flags
-ASFLAGS = -g -mcpu=cortex-m4 -mthumb 
+ASFLAGS = -g -mcpu=cortex-m4 -mthumb
 
 # Compiler Flags
-CFLAGS = -c -O0 -g -mcpu=cortex-m4 -mthumb 
-CFLAGS += -Wall -ffunction-sections -fdata-sections 
+CFLAGS = -c -O0 -g -mcpu=cortex-m4 -mthumb
+CFLAGS += -Wall -ffunction-sections -fdata-sections -fstack-usage
 CFLAGS += -Wno-unused-function -nostdlib
 
 # Linker Flags
-LDFLAGS = -nostdlib -mcpu=cortex-m4 -mthumb --specs=nano.specs --specs=nosys.specs -Wl,--gc-sections -L$(OBJ_DIR) -Wl,--start-group -lc -lgcc -lm -lnosys -lstm32 -Wl,--end-group 
+LDFLAGS = -nostdlib -mcpu=cortex-m4 -mthumb --specs=nano.specs --specs=nosys.specs -Wl,--gc-sections -L$(OBJ_DIR) -Wl,--start-group -lc -lgcc -lm -lnosys -lstm32 -Wl,--end-group
 
 # Set the include search directoties
-CFLAGS += -I$(SRC_DIR) 
+CFLAGS += -I$(SRC_DIR)
 # Include files for CMSIS
 CFLAGS += -I$(LIB_DIR)/Core/Include
 # Include files for HAL
@@ -114,11 +114,11 @@ all: $(BLD_DIR) $(OBJ_DIR) build/firmware.bin
 $(BLD_DIR):
 	@echo "Creating Build Directory"
 	@mkdir -p $(BLD_DIR)
-	
+
 $(OBJ_DIR):
 	@echo "Creating Object Directory"
 	@mkdir -p $(OBJ_DIR)
-	
+
 $(OBJ_DIR)/%.o: %.s
 	@echo "  AS      $(notdir $@)"
 	@$(AS) $(ASFLAGS) -c -o $@ $<
@@ -149,4 +149,3 @@ clean:
 	rm -f obj/*.a
 
 .PHONY: all clean
- 
