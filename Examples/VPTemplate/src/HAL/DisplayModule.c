@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file DisplayModule.c
  *
- * @author Andreas Schmidt (a.v.schmidt81@googlemail.com
+ * @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
  * @date   08.02.2025
  *
  * @copyright Copyright (c) 2025

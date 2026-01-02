@@ -1,3 +1,18 @@
+#******************************************************************************
+# @file main.c
+#
+# @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
+# @date   08.02.2025
+#
+# @copyright Copyright (c) 2025
+#
+#******************************************************************************
+#
+# @brief Main file for the VP Template project
+#
+#
+#******************************************************************************
+
 #
 # Define the commands which should be used to build the files
 # Cross-compilation commands
@@ -25,7 +40,6 @@ HAL_SRC = $(HAL)/Src
 
 # Set the linker file which should be used
 LD_FILE = linker/VP.ld
-#LD_FILE   = linker/STM32G484RETX_FLASH.ld
 
 # Pre-Processor defines to configure the HAL library
 DEF	= -DSTM32G4xx -DSTM32G474xx -DUSE_HAL_DRIVER -DF_CPU=170000000L -DDEBUG_BUILD
@@ -62,12 +76,6 @@ CFLAGS += -I$(SRC_DIR)/HAL
 CFLAGS += -I$(SRC_DIR)/OS
 # Include files for Service
 CFLAGS += -I$(SRC_DIR)/Service
-# Include files for Service
-CFLAGS += -I$(SRC_DIR)/Service/Actuator
-# Include files for Service
-CFLAGS += -I$(SRC_DIR)/Service/Sensor
-# Include files for Service
-CFLAGS += -I$(SRC_DIR)/Service/Util
 # Include files for Utils
 CFLAGS += -I$(SRC_DIR)/Util
 
@@ -91,10 +99,8 @@ SRC_C += $(wildcard $(SRC_DIR)/App/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/HAL/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/OS/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/Service/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Service/Actuator/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Service/Sensor/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Service/Util/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/Util/*.c)
+SRC_C += $(wildcard $(SRC_DIR)/Util/Log/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/Util/Filter/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/Util/StateTable/*.c)
 FILENAMES_C	= $(notdir $(SRC_C))
@@ -107,6 +113,7 @@ STM32LIB_FILENAMES_C = $(notdir $(STM32LIB_SRC_C))
 OBJS_STM32LIB = $(addprefix $(OBJ_DIR)/, $(STM32LIB_FILENAMES_C:.c=.o))
 vpath %.c $(dir $(STM32LIB_SRC_C))
 
+DEPS := $(OBJS_C:.o=.d)
 
 all: $(BLD_DIR) $(OBJ_DIR) build/firmware.bin
 
@@ -129,7 +136,7 @@ $(OBJ_DIR)/%.o: %.S
 
 $(OBJ_DIR)/%.o: %.c
 	@echo "  CC      $(notdir $@)"
-	@$(CC) $(CFLAGS) $(DEF) -c -o $@ $<
+	@$(CC) -c $(CFLAGS) $(DEF) -MP -MMD $< -o $@
 
 $(OBJ_DIR)/libstm32.a: $(OBJS_STM32LIB)
 	@echo "  AR      $(notdir $@)"
@@ -144,8 +151,13 @@ $(BLD_DIR)/%.bin: $(BLD_DIR)/%.elf
 	@arm-none-eabi-objcopy $< -O binary $@
 
 clean:
-	rm -f build/*.elf build/*.bin
-	rm -f obj/*.o
-	rm -f obj/*.a
+	rm -f $(BLD_DIR)/*.elf
+	rm -f $(BLD_DIR)/*.bin
+	rm -f $(OBJ_DIR)/*.o
+	rm -f $(OBJ_DIR)/*.a
+	rm -f $(OBJ_DIR)/*.su
+	rm -f $(OBJ_DIR)/*.d
 
 .PHONY: all clean
+
+-include $(DEPS)

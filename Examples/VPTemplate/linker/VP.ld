@@ -1,80 +1,86 @@
-/*
-*****************************************************************************
-**
-**  File        : VP.ld
-**
-**  Abstract    : Linker script for STM32G474 Device with
-**                512KByte FLASH, 128KByte RAM
-**
-**                Set heap size, stack size and stack location according
-**                to application requirements.
-**
-**                Set memory bank area and size if external memory is used.
-**
-**  Target      : STMicroelectronics STM32
-**
-**
-**  Distribution: The file is distributed as is, without any warranty
-**                of any kind.
-**
-**  (c)Copyright Ac6.
-**  You may use this file as-is or modify it according to the needs of your
-**  project. Distribution of this file (unmodified or modified) is not
-**  permitted. Ac6 permit registered System Workbench for MCU users the
-**  rights to distribute the assembled, compiled & linked contents of this
-**  file as part of an application binary file, provided that it is built
-**  using the System Workbench for MCU toolchain.
-**
-*****************************************************************************
-*/
+/******************************************************************************
+ * @file VP.ld
+ *
+ * @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
+ * @date   08.02.2025
+ *
+ * @copyright Copyright (c) 2025
+ *
+ ******************************************************************************
+ *
+ * @brief Linker file for VPTemplate Project Target system STM32G474
+ *
+ *
+ *****************************************************************************/
 
-/* Entry Point */
+/*
+ * Sets the entry point for the executable
+ * This is only necessary for ELF binaries which are executed on systems like
+ * Linux or Windows. For embedded targets this only helps to provide the linker
+ * the information what the entry point is.
+ *
+ * The entry point in this case is the Reset_Handler function which is defined
+ * in the startup.s file. The Reset_Handler is responsible for setting up a
+ * correct C-Environemt and call the main() function.
+ *
+ */
 ENTRY(Reset_Handler)
 
-/* Specify the memory areas */
+/*
+ * Specifies the memory areas for the target system.
+ * The current configuration only provides the two main memories FLASH and RAM.
+ * Hereby there is no differentiation betwenn the different SRAM banks of the controller
+ *
+ */
 MEMORY
 {
-  RAM    (xrw)     : ORIGIN = 0x20000000,  LENGTH = 128K
-  FLASH  (rx)      : ORIGIN = 0x8000000,   LENGTH = 512K
+  /* RAM Memory Region incl. SRAM1 and SRAM2 */
+  RAM    (rw)      : ORIGIN = 0x20000000,  LENGTH = 128K
+  /* FLASH Memory Region using mapped address 0x08000000. */
+  FLASH  (rx)      : ORIGIN = 0x08000000,  LENGTH = 512K
 }
 
-/* Heap and Stack Sizes */
-_size_of_stack = 0x200;                         /* Size of stack in bytes */
-_size_of_heap  = 0x0;                           /* Size of heap in bytes */
+/***** GLOBAL SYMBOLS ********************************************************/
+
+/* Symbols used for memory management
+ * This includes the stack and also a possible heap memory
+ */
+_size_of_stack = 0x200;                             /* Size of stack in bytes */
+_size_of_heap  = 0x0;                               /* Size of heap in bytes */
 
 /* Highest usable address of the RAM. */
-_end_of_ram = ORIGIN(RAM) + LENGTH(RAM) - 4;    /* End of RAM */
+_end_of_ram = ORIGIN(RAM) + LENGTH(RAM) - 4;        /* End of RAM */
+_initial_stack_pointer = _end_of_ram;               /* Set the symbol for initial stack pointer */
 
+/***** SECTIONS **************************************************************/
 
 /* Define output sections */
 SECTIONS
 {
-  /* The startup code goes first into FLASH */
+  /* Section for Interrupt Vector Table */
   .isr_vector :
   {
     . = ALIGN(4);
-    KEEP(*(.isr_vector)) /* Startup code */
+    /* Include the .isr_vector section which must include the vector interrupt table */
+    KEEP(*(.isr_vector))
     . = ALIGN(4);
   } >FLASH
 
-  /* The program code and other data goes into FLASH */
+  /* .text Section to include program code */
   .text :
   {
     . = ALIGN(4);
-    *(.text)           /* .text sections (code) */
-    *(.text*)          /* .text* sections (code) */
-    *(.glue_7)         /* glue arm to thumb code */
-    *(.glue_7t)        /* glue thumb to arm code */
-    *(.eh_frame)
+    _stext = .;         /* Define global symbol for start of code */
 
-    KEEP (*(.init))
-    KEEP (*(.fini))
+    *(.text)            /* .text sections (code) */
+    *(.text*)           /* .text* sections (code) */
 
     . = ALIGN(4);
-    _etext = .;        /* define a global symbols at end of code */
+
+    _etext = .;         /* Define a global symbols at end of code */
   } >FLASH
 
-  /* Constant data goes into FLASH */
+  /* Section for read-only data (stored in flash) */
   .rodata :
   {
     . = ALIGN(4);
@@ -83,99 +89,53 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
-  .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
-  .ARM : {
-    __exidx_start = .;
-    *(.ARM.exidx*)
-    __exidx_end = .;
-  } >FLASH
 
-  .preinit_array     :
-  {
-    PROVIDE_HIDDEN (__preinit_array_start = .);
-    KEEP (*(.preinit_array*))
-    PROVIDE_HIDDEN (__preinit_array_end = .);
-  } >FLASH
-  .init_array :
-  {
-    PROVIDE_HIDDEN (__init_array_start = .);
-    KEEP (*(SORT(.init_array.*)))
-    KEEP (*(.init_array*))
-    PROVIDE_HIDDEN (__init_array_end = .);
-  } >FLASH
-  .fini_array :
-  {
-    PROVIDE_HIDDEN (__fini_array_start = .);
-    KEEP (*(SORT(.fini_array.*)))
-    KEEP (*(.fini_array*))
-    PROVIDE_HIDDEN (__fini_array_end = .);
-  } >FLASH
+  /* Define a symbol for the load address of the initialized data
+   * This address is located in FLASH
+   */
+  _sloaddata = LOADADDR(.data);
 
-  /* used by the startup to initialize data */
-  _sidata = LOADADDR(.data);
-
-  /* Initialized data sections goes into RAM, load LMA copy after code */
+  /* Initialized data section */
   .data :
   {
     . = ALIGN(4);
+
     _sdata = .;        /* create a global symbol at data start */
+
     *(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
 
     . = ALIGN(4);
+
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
 
-
   /* Uninitialized data section */
   . = ALIGN(4);
-  .bss :
+  .bss (NOLOAD):
   {
     /* This is used by the startup in order to initialize the .bss secion */
     _sbss = .;         /* define a global symbol at bss start */
-    __bss_start__ = _sbss;
+
     *(.bss)
     *(.bss*)
     *(COMMON)
 
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
-    __bss_end__ = _ebss;
+
   } >RAM
 
-  . = ALIGN(4);
-  .heap :
+  .heap (NOLOAD):
   {
+    . = ALIGN(4);
+
     _start_of_heap = .;
     . += _size_of_heap;
 
     . = ALIGN(4);
+
      _end_of_heap = .;
-  } >RAM
-
-  .stack :
-  {
-  	. = ABSOLUTE(_end_of_ram) - _size_of_stack;
-  	. = ALIGN(8);  
-      
-     _top_of_stack = .;
-
-    . += _size_of_stack;
-
-    . = ALIGN(8);
-
-    /*
-    The SP needs to be aligned on 8-Byte boundary. With the following definition,
-    the initial stack pointer meets that requirement but is outside of the valid RAM
-    range. (eg. it has the address 0x20005000). But due to the fact that the stack is
-    "full descending", the push operation first decrements the SP pointer, and then
-    writes the data, this works
-    */
-    _initial_stack_pointer = .;
-    /*
-    The last accessable valid address of the stack is the initial stack pointer - 4
-    */
-    _bottom_of_stack = _initial_stack_pointer - 4;
   } >RAM
 
   /* Remove information from the standard libraries */
@@ -185,6 +145,4 @@ SECTIONS
     libm.a ( * )
     libgcc.a ( * )
   }
-
-  .ARM.attributes 0 : { *(.ARM.attributes) }
 }

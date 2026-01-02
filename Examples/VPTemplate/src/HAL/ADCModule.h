@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file ADCModule.h
  *
- * @author Andreas Schmidt (a.v.schmidt81@googlemail.com
+ * @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
  * @date   08.02.2025
  *
  * @copyright Copyright (c) 2025
@@ -17,7 +17,6 @@
 
 /***** INCLUDES **************************************************************/
 #include <stdint.h>
-
 
 /***** CONSTANTS *************************************************************/
 
@@ -70,5 +69,6 @@ int32_t adcReadChannel(ADC_Channel_t adcChannel);
  * @return Returns value of ADC channel in digits
  */
 int32_t adcReadChannelRaw(ADC_Channel_t adcChannel);
+
 
 #endif

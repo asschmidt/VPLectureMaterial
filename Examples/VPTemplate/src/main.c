@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file main.c
  *
- * @author Andreas Schmidt (a.v.schmidt81@googlemail.com
+ * @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
  * @date   08.02.2025
  *
  * @copyright Copyright (c) 2025
@@ -21,8 +21,8 @@
 #include "HardwareConfig.h"
 
 #include "Util/Global.h"
-#include "Util/printf.h"
-#include "LogOutput.h"
+#include "Util/Log/printf.h"
+#include "Util/Log/LogOutput.h"
 
 #include "UARTModule.h"
 #include "ButtonModule.h"
@@ -54,6 +54,7 @@ static Scheduler gScheduler;            // Global Scheduler instance
 
 /***** PUBLIC FUNCTIONS ******************************************************/
 
+
 /**
  * @brief Main function of System
  */
@@ -79,9 +80,13 @@ int main(void)
     {
         // Toggle all LEDs to the their functionality (Toggle frequency depends on HAL_Delay at end of loop)
         ledToggleLED(LED0);
+        HAL_Delay(100);
         ledToggleLED(LED1);
+        HAL_Delay(100);
         ledToggleLED(LED2);
+        HAL_Delay(100);
         ledToggleLED(LED3);
+        HAL_Delay(100);
 
         // Read to buttons
         Button_Status_t but1 = buttonGetButtonStatus(BTN_SW1);
@@ -95,11 +100,11 @@ int main(void)
         if (but1 == BUTTON_PRESSED)
         {
             outputLogf("Some Message %d\n\r", globalCounter);
-            displayShowDigit(RIGHT_DISPLAY, DIGIT_DASH);
+            //displayShowDigit(RIGHT_DISPLAY, DIGIT_DASH);
         }
         else
         {
-            displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
+            //displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
         }
 
         // If SW2 is pressed, print the ADC digit value on the terminal
@@ -117,6 +122,18 @@ int main(void)
         if (but3 == BUTTON_PRESSED)
         {
         	outputLogf("ADC Val: %d\n\r", adcValue);
+        }
+
+
+        uint8_t buf[10];
+        uartReceiveData(buf, 2);
+        if (buf[0] == 'X' && buf[1] == '\r')
+        {
+            displayShowDigit(RIGHT_DISPLAY, DIGIT_DASH);
+        }
+        else
+        {
+            displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
         }
 
         // Remove this HAL_Delay as soon as there is a Scheduler used
