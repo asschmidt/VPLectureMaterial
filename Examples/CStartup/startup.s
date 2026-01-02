@@ -1,113 +1,77 @@
-/**
-  ******************************************************************************
-  * @file      startup_stm32g474xx.s
-  * @author    MCD Application Team
-  * @brief     STM32G474xx devices vector table GCC toolchain.
-  *            This module performs:
-  *                - Set the initial SP
-  *                - Set the initial PC == Reset_Handler,
-  *                - Set the vector table entries with the exceptions ISR address,
-  *                - Configure the clock system
-  *                - Branches to main in the C library (which eventually
-  *                  calls main()).
-  *            After Reset the Cortex-M4 processor is in Thread mode,
-  *            priority is Privileged, and the Stack is set to Main.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+/******************************************************************************
+ * @file startup.s
+ *
+ * @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
+ * @date   03.01.2026
+ *
+ * @copyright Copyright (c) 2026
+ *
+ ******************************************************************************
+ *
+ * @brief Startup Code for C-Startup Example
+ *
+ *
+ *****************************************************************************/
 
-  .syntax unified
-	.cpu cortex-m4
-	.fpu softvfp
-	.thumb
+.syntax unified
+.cpu cortex-m4
+.fpu softvfp
+.thumb
 
-.global g_pfnVectors
-.global Default_Handler
-
-/* start address for the initialization values of the .data section.
-defined in linker script */
-.word _sidata
-/* start address for the .data section. defined in linker script */
-.word _sdata
-/* end address for the .data section. defined in linker script */
-.word _edata
-/* start address for the .bss section. defined in linker script */
-.word _sbss
-/* end address for the .bss section. defined in linker script */
-.word _ebss
-
-.equ  BootRAM, 0xF108F85F
 /**
  * @brief  This is the code that gets called when the processor first
- *          starts execution following a reset event. Only the absolutely
- *          necessary set is performed, after which the application
- *          supplied main() routine is called.
+ * starts execution following a reset event. Only the absolutely
+ * necessary set is performed, after which the application
+ * supplied main() routine is called.
+ *
  * @param  None
+ *
  * @retval : None
-*/
-
-  .section .text.Reset_Handler
-  .weak Reset_Handler
-  .type Reset_Handler, %function
+ */
+.section .text.Reset_Handler
+.type Reset_Handler, %function
+.global Reset_Handler
 Reset_Handler:
+    /* Copy the data segment initializers from flash to SRAM */
+    ldr r0, =_sdata
+    ldr r1, =_edata
+    ldr r2, =_sloaddata
+    movs r3, #0
+    b .loopCopyData
 
-/* Copy the data segment initializers from flash to SRAM */
-  ldr r0, =_sdata
-  ldr r1, =_edata
-  ldr r2, =_sidata
-  movs r3, #0
-  b LoopCopyDataInit
+.copyData:
+    ldr r4, [r2, r3]
+    str r4, [r0, r3]
+    adds r3, r3, #4
 
-CopyDataInit:
-  ldr r4, [r2, r3]
-  str r4, [r0, r3]
-  adds r3, r3, #4
+.loopCopyData:
+    adds r4, r0, r3
+    cmp r4, r1
+    bcc .copyData
 
-LoopCopyDataInit:
-  adds r4, r0, r3
-  cmp r4, r1
-  bcc CopyDataInit
+    /* Zero fill the bss segment. */
+    ldr r2, =_sbss
+    ldr r4, =_ebss
+    movs r3, #0
+    b .loopFillZerobss
 
-/* Zero fill the bss segment. */
-  ldr r2, =_sbss
-  ldr r4, =_ebss
-  movs r3, #0
-  b LoopFillZerobss
+.fillZerobss:
+    str  r3, [r2]
+    adds r2, r2, #4
 
-FillZerobss:
-  str  r3, [r2]
-  adds r2, r2, #4
+.loopFillZerobss:
+    cmp r2, r4
+    bcc .fillZerobss
 
-LoopFillZerobss:
-  cmp r2, r4
-  bcc FillZerobss
+    /* Initialize the Stack-Pointer */
+    /* Load address of initial_stack_pointer into R0 for. Symbol defined in Linker Script */
+    ldr r0, =_initial_stack_pointer
+    /* Set stack pointer */
+    mov   sp, r0
 
-
-  /* Load addresses for _bottom_of_stack. The _bottom_of_stack symbol
-     is only used for the "pattern loop" because the SP register
-     is initialized with the _initial_stack_pointer address
-
-     BTW: The load of initial_stack_poitner into R0 is only for
-     debugging to check the calculations in the Linker scripts
-  */
-  ldr r0, =_initial_stack_pointer
-  mov   sp, r0          /* set stack pointer */
-
-  /* Call the clock system intitialization function.*/
-  /*bl  SystemInit*/
-  /* Call the application's entry point.*/
-  bl main
-  bx lr
+    /* Call the application's entry point.*/
+    bl main
+    bx lr
 .size Reset_Handler, .-Reset_Handler
 
 /**
