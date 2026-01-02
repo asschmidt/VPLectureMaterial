@@ -68,13 +68,8 @@ int main(void)
     // Initialize Peripherals
     initializePeripherals();
 
-    // Prepare Scheduler
-    // ...
-
     // Initialize Scheduler
     schedInitialize(&gScheduler);
-
-    int globalCounter = 0;
 
     while (1)
     {
@@ -87,43 +82,8 @@ int main(void)
         HAL_Delay(100);
         ledToggleLED(LED3);
         HAL_Delay(100);
-
-        // Read to buttons
-        Button_Status_t but1 = buttonGetButtonStatus(BTN_SW1);
-        Button_Status_t but2 = buttonGetButtonStatus(BTN_SW2);
-        Button_Status_t but3 = buttonGetButtonStatus(BTN_B1);
-
-        // Read the POT1 input from ADC
-        int adcValue = adcReadChannel(ADC_INPUT0);
-
-        // If SW1 is pressed, print some debug message on the terminal
-        if (but1 == BUTTON_PRESSED)
-        {
-            outputLogf("Some Message %d\n\r", globalCounter);
-            //displayShowDigit(RIGHT_DISPLAY, DIGIT_DASH);
-        }
-        else
-        {
-            //displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
-        }
-
-        // If SW2 is pressed, print the ADC digit value on the terminal
-        if (but2 == BUTTON_PRESSED)
-        {
-        	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_RESET);
-            //displayShowDigit(LEFT_DISPLAY, DIGIT_DASH);
-        }
-        else
-        {
-        	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_SET);
-            //displayShowDigit(LEFT_DISPLAY, DIGIT_OFF);
-        }
-
-        if (but3 == BUTTON_PRESSED)
-        {
-        	outputLogf("ADC Val: %d\n\r", adcValue);
-        }
-
+        ledToggleLED(LED4);
+        HAL_Delay(100);
 
         uint8_t buf[10];
         uartReceiveData(buf, 2);
@@ -135,9 +95,6 @@ int main(void)
         {
             displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
         }
-
-        // Remove this HAL_Delay as soon as there is a Scheduler used
-        HAL_Delay(100);
     }
 }
 
