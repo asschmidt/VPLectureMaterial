@@ -35,11 +35,11 @@
  */
 typedef enum _LED_t
 {
-    LED0,                               //!< LED0 used for Mode indication
+    LED0,                               //!< LED0
     LED1,                               //!< LED1
     LED2,                               //!< LED2
-    LED3,                               //!< LED3 used for Motor indication
-    LED4                                //!< LED4 used for Sensor Failure/OK
+    LED3,                               //!< LED3
+    LED4                                //!< LED4
 } LED_t;
 
 /**

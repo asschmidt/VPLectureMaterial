@@ -56,6 +56,14 @@ int32_t uartInitialize(uint32_t baudrate);
  */
 int32_t uartSendData(uint8_t* pDataBuffer, int32_t bufferLength);
 
+/**
+ * @brief Receives data from the UART interface
+ *
+ * @param pDataBuffer Pointer to the data buffer which is used to store the recevied bytes
+ * @param bufferLength Length of the buffer (number of bytes)
+ *
+ * @return Returns UART_ERR_OK if no error occured, otherwise UART_ERR_RECEIVE
+ */
 int32_t uartReceiveData(uint8_t* pDataBuffer, int32_t bufferLength);
 
 #endif

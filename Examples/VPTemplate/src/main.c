@@ -63,31 +63,20 @@ int main(void)
     // Initialize the HAL
     HAL_Init();
 
+    // Initialize the System Clock
     SystemClock_Config();
 
     // Initialize Peripherals
     initializePeripherals();
 
-    // Prepare Scheduler
-    // ...
-
     // Initialize Scheduler
     schedInitialize(&gScheduler);
 
     int globalCounter = 0;
+    uint8_t left = 0;
 
     while (1)
     {
-        // Toggle all LEDs to the their functionality (Toggle frequency depends on HAL_Delay at end of loop)
-        ledToggleLED(LED0);
-        HAL_Delay(100);
-        ledToggleLED(LED1);
-        HAL_Delay(100);
-        ledToggleLED(LED2);
-        HAL_Delay(100);
-        ledToggleLED(LED3);
-        HAL_Delay(100);
-
         // Read to buttons
         Button_Status_t but1 = buttonGetButtonStatus(BTN_SW1);
         Button_Status_t but2 = buttonGetButtonStatus(BTN_SW2);
@@ -99,24 +88,27 @@ int main(void)
         // If SW1 is pressed, print some debug message on the terminal
         if (but1 == BUTTON_PRESSED)
         {
-            outputLogf("Some Message %d\n\r", globalCounter);
-            //displayShowDigit(RIGHT_DISPLAY, DIGIT_DASH);
-        }
-        else
-        {
-            //displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
+            // Toggle all LEDs to the their functionality (Toggle frequency depends on HAL_Delay at end of loop)
+            ledToggleLED(LED0);
+            HAL_Delay(25);
+            ledToggleLED(LED1);
+            HAL_Delay(25);
+            ledToggleLED(LED2);
+            HAL_Delay(25);
+            ledToggleLED(LED3);
+            HAL_Delay(25);
+            ledToggleLED(LED4);
+            HAL_Delay(25);
         }
 
         // If SW2 is pressed, print the ADC digit value on the terminal
         if (but2 == BUTTON_PRESSED)
         {
         	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_RESET);
-            //displayShowDigit(LEFT_DISPLAY, DIGIT_DASH);
         }
         else
         {
         	HAL_GPIO_WritePin(BEEP_GPIO_PORT, BEEP_PIN, GPIO_PIN_SET);
-            //displayShowDigit(LEFT_DISPLAY, DIGIT_OFF);
         }
 
         if (but3 == BUTTON_PRESSED)
@@ -124,20 +116,25 @@ int main(void)
         	outputLogf("ADC Val: %d\n\r", adcValue);
         }
 
-
-        uint8_t buf[10];
-        uartReceiveData(buf, 2);
-        if (buf[0] == 'X' && buf[1] == '\r')
+        globalCounter++;
+        if (globalCounter > 99)
         {
-            displayShowDigit(RIGHT_DISPLAY, DIGIT_DASH);
+            globalCounter = 0;
+        }
+
+        if (left == 1)
+        {
+            displayShowDigit(LEFT_DISPLAY, (globalCounter / 10));
         }
         else
         {
-            displayShowDigit(RIGHT_DISPLAY, DIGIT_OFF);
+            displayShowDigit(RIGHT_DISPLAY, (globalCounter % 10));
         }
 
+        left = !left;
+
         // Remove this HAL_Delay as soon as there is a Scheduler used
-        HAL_Delay(100);
+        HAL_Delay(25);
     }
 }
 
