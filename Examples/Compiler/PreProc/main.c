@@ -4,9 +4,6 @@
  * Author: Andreas Schmidt
  *
  */
-#include "secondinc.h"
-
-
 #ifdef SPECIAL_VERSION
 	#define INIT_VALUE 0xABCD
 #else
@@ -17,10 +14,11 @@
     #warning "Special Version Build!!!"
 #endif
 
-#define WAIT_LOOP(x) int v=x; do { v++; }while(v > 10);\
-                     v = v * x; \
-                     int b = v * v;
-                     debugOut();
+
+#define WAIT_LOOP(x)                            \
+            for (int i=0; i<(x * 1000); i++)    \
+                _nop();                         \
+
 
 static int globalVarInit = INIT_VALUE;
 static int globalVarNoInit;
@@ -46,9 +44,9 @@ void debugOut()
 
 int main(void)
 {
-    #ifdef DEBUG
+    //#ifdef DEBUG
     debugOut();
-    #endif
+    //#endif
 
     WAIT_LOOP(10)
 
