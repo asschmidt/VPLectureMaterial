@@ -1,17 +1,17 @@
-#******************************************************************************
+###############################################################################
 # @file main.c
 #
 # @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
-# @date   08.02.2025
+# @date   03.01.2026
 #
-# @copyright Copyright (c) 2025
+# @copyright Copyright (c) 2026
 #
-#******************************************************************************
+###############################################################################
 #
 # @brief Main file for the VP Template project
 #
 #
-#******************************************************************************
+###############################################################################
 
 #
 # Define the commands which should be used to build the files
@@ -24,9 +24,9 @@ OBJCOPY = arm-none-eabi-objcopy
 SIZE    = arm-none-eabi-size
 
 
-#
+###############################################################################
 # Project specific options
-#
+###############################################################################
 
 # Directory Layout
 SRC_DIR	  = src
@@ -39,21 +39,24 @@ HAL = $(LIB_DIR)/HAL
 HAL_SRC = $(HAL)/Src
 
 # Set the linker file which should be used
-LD_FILE = linker/VP.ld
+#
+APP_LD_FILE = linker/App.ld
+AUTH_LD_FILE = linker/Auth.ld
 
 # Pre-Processor defines to configure the HAL library
 DEF	= -DSTM32G4xx -DSTM32G474xx -DUSE_HAL_DRIVER -DF_CPU=170000000L -DDEBUG_BUILD
 
-#
+
+###############################################################################
 # Flags for the Assembler, Compiler and Linker
-#
+###############################################################################
 
 # Assembler Flags
 ASFLAGS = -g -mcpu=cortex-m4 -mthumb
 
 # Compiler Flags
 CFLAGS = -c -O0 -g -mcpu=cortex-m4 -mthumb
-CFLAGS += -Wall -ffunction-sections -fdata-sections -fstack-usage
+CFLAGS += -Wall -ffunction-sections -fdata-sections -fstack-usage -fdump-rtl-expand
 CFLAGS += -Wno-unused-function -nostdlib
 
 # Linker Flags
@@ -79,12 +82,17 @@ CFLAGS += -I$(SRC_DIR)/Service
 # Include files for Utils
 CFLAGS += -I$(SRC_DIR)/Util
 
+###############################################################################
+# Source files for the HAL library
+###############################################################################
+STM32LIB_SRC_C = $(wildcard $(HAL_SRC)/*.c)
+STM32LIB_FILENAMES_C = $(notdir $(STM32LIB_SRC_C))
+OBJS_STM32LIB = $(addprefix $(OBJ_DIR)/, $(STM32LIB_FILENAMES_C:.c=.o))
+vpath %.c $(dir $(STM32LIB_SRC_C))
 
-#
-# Rules to setup the source and object filenames
-#
-
-# Project specific Assembler source files
+###############################################################################
+# Project specific Application/Auth Assembler source files
+###############################################################################
 SRC_ASM += $(wildcard $(SRC_DIR)/*.s)
 SRC_ASM += $(wildcard $(SRC_DIR)/*.S)
 FILENAMES_ASM = $(notdir $(SRC_ASM))
@@ -93,31 +101,46 @@ OBJS_ASM = $(addprefix $(OBJ_DIR)/, $(OBJFILENAMES_ASM:.S=.o))
 vpath %.s $(dir $(SRC_ASM))
 vpath %.S $(dir $(SRC_ASM))
 
-# Project specific C-Source files
-SRC_C += $(wildcard $(SRC_DIR)/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/App/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/HAL/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/OS/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Service/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Util/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Util/Log/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Util/Filter/*.c)
-SRC_C += $(wildcard $(SRC_DIR)/Util/StateTable/*.c)
-FILENAMES_C	= $(notdir $(SRC_C))
-OBJS_C = $(addprefix $(OBJ_DIR)/, $(FILENAMES_C:.c=.o))
-vpath %.c $(dir $(SRC_C))
+###############################################################################
+# Project specific Application C-Source files
+###############################################################################
+APP_SRC_C += $(SRC_DIR)/main.c
+APP_SRC_C += $(SRC_DIR)/System.c
+APP_SRC_C += $(wildcard $(SRC_DIR)/App/*.c)
+APP_SRC_C += $(wildcard $(SRC_DIR)/HAL/*.c)
+APP_SRC_C += $(wildcard $(SRC_DIR)/OS/*.c)
+APP_SRC_C += $(wildcard $(SRC_DIR)/Service/*.c)
+APP_SRC_C += $(wildcard $(SRC_DIR)/Util/*.c)
+APP_SRC_C += $(wildcard $(SRC_DIR)/Util/Log/*.c)
+APP_SRC_C += $(wildcard $(SRC_DIR)/Util/Filter/*.c)
+APP_SRC_C += $(wildcard $(SRC_DIR)/Util/StateTable/*.c)
+APP_FILENAMES_S	= $(notdir $(APP_SRC_C))
+APP_OBJS_C = $(addprefix $(OBJ_DIR)/, $(APP_FILENAMES_S:.c=.o))
+vpath %.c $(dir $(APP_SRC_C))
 
-# Source files for the HAL library
-STM32LIB_SRC_C = $(wildcard $(HAL_SRC)/*.c)
-STM32LIB_FILENAMES_C = $(notdir $(STM32LIB_SRC_C))
-OBJS_STM32LIB = $(addprefix $(OBJ_DIR)/, $(STM32LIB_FILENAMES_C:.c=.o))
-vpath %.c $(dir $(STM32LIB_SRC_C))
+###############################################################################
+# Project specific Authenticator C-Source files
+###############################################################################
+AUTH_SRC_C += $(SRC_DIR)/main_auth.c
+AUTH_SRC_C += $(SRC_DIR)/System.c
+AUTH_SRC_C += $(wildcard $(SRC_DIR)/HAL/*.c)
+AUTH_SRC_C += $(wildcard $(SRC_DIR)/OS/*.c)
+AUTH_SRC_C += $(wildcard $(SRC_DIR)/Service/*.c)
+AUTH_SRC_C += $(wildcard $(SRC_DIR)/Util/*.c)
+AUTH_SRC_C += $(wildcard $(SRC_DIR)/Util/Log/*.c)
+AUTH_SRC_C += $(wildcard $(SRC_DIR)/Util/Filter/*.c)
+AUTH_SRC_C += $(wildcard $(SRC_DIR)/Util/StateTable/*.c)
+AUTH_FILENAMES_S	= $(notdir $(AUTH_SRC_C))
+AUTH_OBJS_C = $(addprefix $(OBJ_DIR)/, $(AUTH_FILENAMES_S:.c=.o))
+vpath %.c $(dir $(AUTH_SRC_C))
 
-DEPS := $(OBJS_C:.o=.d)
+DEPS := $(APP_OBJS_C:.o=.d)
 
-all: $(BLD_DIR) $(OBJ_DIR) build/firmware.bin
+all: $(BLD_DIR) $(OBJ_DIR) $(BLD_DIR)/app.bin $(BLD_DIR)/auth.bin
 
+###############################################################################
 # Rules
+###############################################################################
 $(BLD_DIR):
 	@echo "Creating Build Directory"
 	@mkdir -p $(BLD_DIR)
@@ -142,9 +165,13 @@ $(OBJ_DIR)/libstm32.a: $(OBJS_STM32LIB)
 	@echo "  AR      $(notdir $@)"
 	@ar rcs $@ $(OBJS_STM32LIB)
 
-$(BLD_DIR)/firmware.elf: $(OBJ_DIR)/libstm32.a $(OBJS_ASM) $(OBJS_C) | $(LD_FILE)
+$(BLD_DIR)/app.elf: $(OBJ_DIR)/libstm32.a $(OBJS_ASM) $(APP_OBJS_C) | $(APP_LD_FILE)
 	@echo "  LD      $(notdir $@)"
-	@$(LD) $^ $(LDFLAGS) $(INC) -T$(LD_FILE) -Wl,-Map $(BLD_DIR)/firmware.map -o $@
+	@$(LD) $^ $(LDFLAGS) $(INC) -T$(APP_LD_FILE) -Wl,-Map $(BLD_DIR)/app.map -o $@
+
+$(BLD_DIR)/auth.elf: $(OBJ_DIR)/libstm32.a $(OBJS_ASM) $(AUTH_OBJS_C) | $(AUTH_LD_FILE)
+	@echo "  LD      $(notdir $@)"
+	@$(LD) $^ $(LDFLAGS) $(INC) -T$(AUTH_LD_FILE) -Wl,-Map $(BLD_DIR)/auth.map -o $@
 
 $(BLD_DIR)/%.bin: $(BLD_DIR)/%.elf
 	@echo "  OBJCOPY $(notdir $@)"

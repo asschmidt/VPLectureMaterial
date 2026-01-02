@@ -2,13 +2,13 @@
  * @file VP.ld
  *
  * @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
- * @date   08.02.2025
+ * @date   03.01.2026
  *
- * @copyright Copyright (c) 2025
+ * @copyright Copyright (c) 2026
  *
  ******************************************************************************
  *
- * @brief Linker file for VPTemplate Project Target system STM32G474
+ * @brief Linker file for VPTemplate Application Project Target system STM32G474
  *
  *
  *****************************************************************************/

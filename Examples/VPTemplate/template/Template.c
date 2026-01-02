@@ -4,7 +4,7 @@
  * @author <Author>
  * @date   <Date>
  *
- * @copyright Copyright (c) 2025
+ * @copyright Copyright (c) 2026
  *
  ******************************************************************************
  *

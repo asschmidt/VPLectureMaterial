@@ -8,7 +8,7 @@
  *
  ******************************************************************************
  *
- * @brief Main file for the VP Template project
+ * @brief Main file for the VP Template Authenticator project
  *
  *
  *****************************************************************************/

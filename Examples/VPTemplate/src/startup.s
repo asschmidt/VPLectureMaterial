@@ -2,9 +2,9 @@
  * @file startup.s
  *
  * @author Andreas Schmidt (a.v.schmidt81@googlemail.com)
- * @date   08.02.2025
+ * @date   03.01.2026
  *
- * @copyright Copyright (c) 2025
+ * @copyright Copyright (c) 2026
  *
  ******************************************************************************
  *
