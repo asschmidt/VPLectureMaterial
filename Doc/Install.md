@@ -1,3 +1,14 @@
+# Development Tools
+The examples, excersises and exam are based on a specific set of tools. The tools include basically an ARM compiler toolchain, an IDE and tools to support on-target debugging on a STM32 Nucleo board. 
+
+The installation script respectively the explanation of the manual installation is based on a Linux machine. All the necessary tools are also available of other platforms (Windows, MacOS) but the installation and configuration for those platforms must be done by your own. The following tools are needed at a minimim:
+- GNU GCC Toolchain for Target-System (i.e x86_64)
+- GNU GCC Toolchain for ARM System
+- OpenOCD for GDB/JTAG Debugging
+- Make build system (e.g. for Windows mingw32-make)
+- Eclipse C/C++ IDE Package
+
+
 # Installation based on Kali VM
 Download and install VirtualBox on your system
 
