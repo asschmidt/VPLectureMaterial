@@ -84,6 +84,18 @@ int32_t timerInitialize()
 }
 
 /**
+ * @brief Uninitializes the Timer Module
+ *
+ * @return Returns TIMER_ERR_OK if no error occured
+ */
+int32_t timerUninitialize()
+{
+	HAL_TIM_Base_DeInit(&gTimer3Handle);
+
+	return TIMER_ERR_OK;
+}
+
+/**
 * @brief TIM_Base MSP Initialization
 * This function configures the hardware resources used in this example
 *

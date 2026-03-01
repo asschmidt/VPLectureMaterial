@@ -147,7 +147,7 @@ vpath %.c $(dir $(AUTH_SRC_C))
 
 DEPS := $(APP_OBJS_C:.o=.d)
 
-all: $(BLD_DIR) $(OBJ_DIR) $(BLD_DIR)/app.bin $(BLD_DIR)/auth.bin
+all: linkTouch $(BLD_DIR) $(OBJ_DIR) $(BLD_DIR)/app.bin $(BLD_DIR)/auth.bin
 
 ###############################################################################
 # Rules
@@ -196,6 +196,10 @@ clean:
 	rm -f $(OBJ_DIR)/*.su
 	rm -f $(OBJ_DIR)/*.d
 
-.PHONY: all clean
+linkTouch:
+	touch $(SRC_DIR)/vectors_auth.s
+	touch $(SRC_DIR)/vectors_app.s
+
+.PHONY: linkTouch all clean
 
 -include $(DEPS)

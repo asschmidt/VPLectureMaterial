@@ -51,6 +51,13 @@ typedef enum _ADC_Channel_
 int32_t adcInitialize();
 
 /**
+ * @brief Uninitializes the ADC and stops any ongoing conversion
+ *
+ * @return Returns ADC_ERR_OK if no error occured
+ */
+int32_t adcUninitialize();
+
+/**
  * @brief Reads an ADC channel by returning the global ADC value read via
  * interrupt and DMA and converts it to millivolt
  *

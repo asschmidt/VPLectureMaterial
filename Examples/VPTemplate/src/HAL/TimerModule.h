@@ -40,4 +40,11 @@
  */
 int32_t timerInitialize();
 
+/**
+ * @brief Uninitializes the Timer Module
+ *
+ * @return Returns TIMER_ERR_OK if no error occured
+ */
+int32_t timerUninitialize();
+
 #endif

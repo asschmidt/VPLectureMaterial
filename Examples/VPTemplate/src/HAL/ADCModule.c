@@ -158,6 +158,24 @@ int32_t adcInitialize()
 }
 
 /**
+ * @brief Uninitializes the ADC and stops any ongoing conversion
+ *
+ * @return Returns ADC_ERR_OK if no error occured
+ */
+int32_t adcUninitialize()
+{
+	// Stop DMA Transfers
+	HAL_ADC_Stop_DMA(&gADCHandle);
+	// De-Initialize the DMA
+	HAL_DMA_DeInit(&gDMA_ADC_Handle);
+	// De-Initialize the ADC
+	HAL_ADC_DeInit(&gADCHandle);
+
+
+	return ADC_ERR_OK;
+}
+
+/**
 * @brief ADC MSP Initialization
 *
 * This function configures the hardware resources used for ADC including
